@@ -34,6 +34,8 @@
       color: #666;
       margin-bottom: 1rem;
     }
+
+    /* Reproductor falso */
     .fake-player {
       border: 1px solid #ddd;
       border-radius: 4px;
@@ -53,29 +55,52 @@
       margin: 0.5rem 0 0.8rem;
     }
     .fake-bar-inner {
-      width: 45%;
+      width: 25%;
       height: 100%;
       background: #999;
     }
+    /* Animación de “carga” cuando el usuario hace clic */
+    .playing {
+      animation: progress 1.8s infinite ease-in-out;
+    }
+    @keyframes progress {
+      0%   { width: 0%; }
+      50%  { width: 80%; }
+      100% { width: 25%; }
+    }
 
-    /* 🔥 El contenido oculto */
+    /* Contenido oculto hasta el clic */
     #hidden-content {
       display: none;
-      margin-top: 2rem;
+      margin-top: 2.5rem;
       text-align: center;
       animation: fadeIn 0.8s ease forwards;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     #big-inocente {
-      font-size: 3rem;
+      font-size: 3.2rem;
       color: #b30000;
       margin-bottom: 1rem;
-      font-weight: bold;
+      font-weight: 800;
+    }
+
+    .archive-note {
+      text-align: left;
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .archive-note strong {
+      font-weight: 600;
+    }
+    .signature {
+      font-size: 0.85rem;
+      color: #777;
+      margin-top: 0.5rem;
     }
   </style>
 </head>
@@ -90,45 +115,64 @@
       Registro de radiodifusión · Orquesta de la Radio Nacional · Archivo digital de acceso restringido
     </p>
 
-    <!-- 🔊 REPRODUCTOR FALSO (EL USUARIO DEBE CLICAR) -->
+    <!-- 🔊 REPRODUCTOR FALSO -->
     <div id="player" class="fake-player">
       <strong>Reproducción en línea</strong>
       <div class="fake-bar">
-        <div class="fake-bar-inner"></div>
+        <div class="fake-bar-inner" id="progress-bar"></div>
       </div>
-      <div style="font-size:0.9rem;color:#555;">
+      <div id="status-text" style="font-size:0.9rem;color:#555;">
         Haz clic para iniciar la reproducción del máster restaurado…
       </div>
     </div>
 
-    <!-- 🎭 CONTENIDO OCULTO QUE APARECE TRAS EL CLIC -->
+    <!-- 🎭 CONTENIDO OCULTO HASTA DESPUÉS DEL CLIC -->
     <div id="hidden-content">
       <div id="big-inocente">🎻 INOCENTE, INOCENTE 😄</div>
 
-      <h2>Nota del archivo</h2>
-      <p>
-        Esta página se ha creado exclusivamente como una pequeña broma musicológica.
-        Gunnar Leopold Brummelkamp <strong>no existió nunca</strong>.
-      </p>
-
-      <p>
-        Gracias por llegar hasta aquí y por tomarte tan en serio una historia completamente inventada.
-      </p>
+      <div class="archive-note">
+        <p>
+          Esta página se ha creado exclusivamente como una pequeña broma musicológica.
+          Gunnar Leopold Brummelkamp <strong>no existió nunca</strong>.
+        </p>
+        <p>
+          Si has llegado hasta aquí, es que te has tomado muy en serio una historia
+          completamente inventada. Que no se diga que no confías en las notas al programa.
+        </p>
+        <p class="signature">
+          Harmonia Archive · Ficha apócrifa GLB-27/1 · Registro experimental
+        </p>
+      </div>
     </div>
   </main>
 
   <script>
-    // Cuando el usuario hace clic en el reproductor…
-    document.getElementById('player').addEventListener('click', function() {
+    // Lógica del engaño: solo al hacer clic se revela el contenido
+    const player      = document.getElementById('player');
+    const barInner    = document.getElementById('progress-bar');
+    const statusText  = document.getElementById('status-text');
+    const hiddenBlock = document.getElementById('hidden-content');
 
-      // Mostrar el contenido oculto
-      document.getElementById('hidden-content').style.display = 'block';
+    let alreadyClicked = false;
 
-      // Opcional: desplazar la pantalla hacia el texto revelado
+    player.addEventListener('click', function () {
+      if (alreadyClicked) return;  // Evita que se repita
+      alreadyClicked = true;
+
+      statusText.textContent = 'Iniciando reproducción desde copia de seguridad del archivo…';
+      barInner.classList.add('playing');
+
+      // Después de unos segundos de “carga”, revelamos la broma
       setTimeout(() => {
-        document.getElementById('hidden-content').scrollIntoView({ behavior: 'smooth' });
-      }, 200);
+        barInner.classList.remove('playing');
+        statusText.textContent = 'Reproducción no disponible para este registro.';
+        hiddenBlock.style.display = 'block';
+
+        // Desplazamos la vista hacia el mensaje grande
+        hiddenBlock.scrollIntoView({ behavior: 'smooth' });
+      }, 3200);
     });
   </script>
 </body>
 </html>
+
