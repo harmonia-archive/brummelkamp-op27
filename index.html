@@ -39,27 +39,24 @@
     .fake-player {
       border: 1px solid #ddd;
       border-radius: 4px;
-      padding: 1rem;
+      padding: 1.5rem;
       margin: 1.5rem 0;
       background: #fafafa;
-      cursor: pointer;
-    }
-    .fake-player:hover {
-      background: #f0f0f0;
+      text-align: center;
     }
     .fake-bar {
       height: 6px;
       border-radius: 3px;
       background: #ddd;
       overflow: hidden;
-      margin: 0.5rem 0 0.8rem;
+      margin: 1rem auto;
+      width: 80%;
     }
     .fake-bar-inner {
       width: 25%;
       height: 100%;
       background: #999;
     }
-    /* Animación de “carga” cuando el usuario hace clic */
     .playing {
       animation: progress 1.8s infinite ease-in-out;
     }
@@ -69,7 +66,7 @@
       100% { width: 25%; }
     }
 
-    /* Contenido oculto hasta el clic */
+    /* Contenido oculto */
     #hidden-content {
       display: none;
       margin-top: 2.5rem;
@@ -77,7 +74,7 @@
       animation: fadeIn 0.8s ease forwards;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
@@ -94,13 +91,28 @@
       font-size: 0.95rem;
       line-height: 1.5;
     }
-    .archive-note strong {
-      font-weight: 600;
-    }
     .signature {
       font-size: 0.85rem;
       color: #777;
       margin-top: 0.5rem;
+    }
+
+    /* Botón PLAY */
+    #play-button {
+      font-size: 1.4rem;
+      font-weight: bold;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 6px;
+      background: #0077cc;
+      color: white;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    #play-button:disabled {
+      background: #555;
+      cursor: default;
     }
   </style>
 </head>
@@ -115,19 +127,28 @@
       Registro de radiodifusión · Orquesta de la Radio Nacional · Archivo digital de acceso restringido
     </p>
 
-    <!-- 🔊 REPRODUCTOR FALSO -->
+    <!-- 🔊 REPRODUCTOR CON BOTÓN PLAY -->
     <div id="player" class="fake-player">
-      <strong>Reproducción en línea</strong>
+
+      <button id="play-button">▶ PLAY</button>
+
+      <div style="margin-top:0.4rem; color:#444; font-size:0.95rem;">
+        Reproducción en línea (archivo restaurado)
+      </div>
+
       <div class="fake-bar">
         <div class="fake-bar-inner" id="progress-bar"></div>
       </div>
-      <div id="status-text" style="font-size:0.9rem;color:#555;">
-        Haz clic para iniciar la reproducción del máster restaurado…
+
+      <div id="status-text" style="font-size:0.9rem; color:#555; margin-top:0.6rem;">
+        Haz clic en PLAY para iniciar la reproducción…
       </div>
+
     </div>
 
-    <!-- 🎭 CONTENIDO OCULTO HASTA DESPUÉS DEL CLIC -->
+    <!-- 🎭 CONTENIDO OCULTO TRAS EL CLIC -->
     <div id="hidden-content">
+
       <div id="big-inocente">🎻 INOCENTE, INOCENTE 😄</div>
 
       <div class="archive-note">
@@ -139,6 +160,7 @@
           Si has llegado hasta aquí, es que te has tomado muy en serio una historia
           completamente inventada. Que no se diga que no confías en las notas al programa.
         </p>
+
         <p class="signature">
           Harmonia Archive · Ficha apócrifa GLB-27/1 · Registro experimental
         </p>
@@ -147,28 +169,25 @@
   </main>
 
   <script>
-    // Lógica del engaño: solo al hacer clic se revela el contenido
-    const player      = document.getElementById('player');
+    const playButton  = document.getElementById('play-button');
     const barInner    = document.getElementById('progress-bar');
     const statusText  = document.getElementById('status-text');
     const hiddenBlock = document.getElementById('hidden-content');
 
     let alreadyClicked = false;
 
-    player.addEventListener('click', function () {
-      if (alreadyClicked) return;  // Evita que se repita
+    playButton.addEventListener('click', function () {
+      if (alreadyClicked) return;
       alreadyClicked = true;
 
-      statusText.textContent = 'Iniciando reproducción desde copia de seguridad del archivo…';
+      playButton.disabled = true;
+      statusText.textContent = 'Cargando reproducción desde la copia de archivo…';
       barInner.classList.add('playing');
 
-      // Después de unos segundos de “carga”, revelamos la broma
       setTimeout(() => {
         barInner.classList.remove('playing');
         statusText.textContent = 'Reproducción no disponible para este registro.';
         hiddenBlock.style.display = 'block';
-
-        // Desplazamos la vista hacia el mensaje grande
         hiddenBlock.scrollIntoView({ behavior: 'smooth' });
       }, 3200);
     });
