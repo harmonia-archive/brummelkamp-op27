@@ -29,12 +29,6 @@
       font-size: 1.6rem;
       margin-bottom: 0.5rem;
     }
-    h2 {
-      margin-top: 1.5rem;
-      font-size: 1.2rem;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 0.3rem;
-    }
     .meta {
       font-size: 0.9rem;
       color: #666;
@@ -46,6 +40,10 @@
       padding: 1rem;
       margin: 1.5rem 0;
       background: #fafafa;
+      cursor: pointer;
+    }
+    .fake-player:hover {
+      background: #f0f0f0;
     }
     .fake-bar {
       height: 6px;
@@ -53,17 +51,31 @@
       background: #ddd;
       overflow: hidden;
       margin: 0.5rem 0 0.8rem;
-      position: relative;
     }
     .fake-bar-inner {
       width: 45%;
       height: 100%;
       background: #999;
     }
-    .warning {
-      margin-top: 1.5rem;
-      font-size: 1.1rem;
+
+    /* 🔥 El contenido oculto */
+    #hidden-content {
+      display: none;
+      margin-top: 2rem;
       text-align: center;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #big-inocente {
+      font-size: 3rem;
+      color: #b30000;
+      margin-bottom: 1rem;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -71,31 +83,52 @@
   <header>
     <div>Harmonia Archive · Colección de registros históricos</div>
   </header>
+
   <main>
     <h1>Gunnar Leopold Brummelkamp<br>Fantasía sobre un canto marinero, Op.27 (c.1933)</h1>
     <p class="meta">
       Registro de radiodifusión · Orquesta de la Radio Nacional · Archivo digital de acceso restringido
     </p>
 
-    <div class="fake-player">
+    <!-- 🔊 REPRODUCTOR FALSO (EL USUARIO DEBE CLICAR) -->
+    <div id="player" class="fake-player">
       <strong>Reproducción en línea</strong>
       <div class="fake-bar">
         <div class="fake-bar-inner"></div>
       </div>
       <div style="font-size:0.9rem;color:#555;">
-        Cargando flujo de audio desde máster restaurado…
+        Haz clic para iniciar la reproducción del máster restaurado…
       </div>
     </div>
 
-    <h2>Nota del archivo</h2>
-    <p>
-      Esta página se ha creado exclusivamente como una pequeña broma musicológica.
-      Gunnar Leopold Brummelkamp <strong>no existió nunca</strong>.
-    </p>
-    <p class="warning">
-      🎻 <strong>Inocente, inocente</strong> 😄<br>
-      Gracias por llegar hasta aquí y por tomarte tan en serio una historia completamente inventada.
-    </p>
+    <!-- 🎭 CONTENIDO OCULTO QUE APARECE TRAS EL CLIC -->
+    <div id="hidden-content">
+      <div id="big-inocente">🎻 INOCENTE, INOCENTE 😄</div>
+
+      <h2>Nota del archivo</h2>
+      <p>
+        Esta página se ha creado exclusivamente como una pequeña broma musicológica.
+        Gunnar Leopold Brummelkamp <strong>no existió nunca</strong>.
+      </p>
+
+      <p>
+        Gracias por llegar hasta aquí y por tomarte tan en serio una historia completamente inventada.
+      </p>
+    </div>
   </main>
+
+  <script>
+    // Cuando el usuario hace clic en el reproductor…
+    document.getElementById('player').addEventListener('click', function() {
+
+      // Mostrar el contenido oculto
+      document.getElementById('hidden-content').style.display = 'block';
+
+      // Opcional: desplazar la pantalla hacia el texto revelado
+      setTimeout(() => {
+        document.getElementById('hidden-content').scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+    });
+  </script>
 </body>
 </html>
